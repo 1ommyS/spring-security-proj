@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: demo
+
+
+app:
+  jwt:
+    secret: "my-super-juper-dlinniy-secret-slovo-ha-ha-ha-ha-ha-ha"
+    expiration-access: 36000
+    expiration-refresh: 86400
