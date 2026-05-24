@@ -1,7 +1,6 @@
 package com.example.demo.security;
 
 import com.example.demo.service.JwtService;
-import io.jsonwebtoken.Jwt;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +13,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -63,21 +61,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    writeInvalidTokenResponse(response);
+                    return;
                 }
             }
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            logger.error("ERRRO!!!!", e);
+            logger.error("Invalid JWT", e);
 
-            SecurityContextHolder.clearContext();
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.getWriter().write("""
-                    {
-                    "error": "invalid_token"
-                    }
-                    """);
+            writeInvalidTokenResponse(response);
         }
+    }
+
+    private void writeInvalidTokenResponse(HttpServletResponse response) throws IOException {
+        SecurityContextHolder.clearContext();
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("""
+                {
+                "error": "invalid_token"
+                }
+                """);
     }
 }
