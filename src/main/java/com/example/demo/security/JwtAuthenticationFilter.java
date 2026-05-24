@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (username != null && contextIsEmpty) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                if (jwtService.isValid(token, userDetails)) {
+                if (jwtService.isAccessTokenValid(token, userDetails)) {
                     var authorities = jwtService.extractRoles(token).stream().map(SimpleGrantedAuthority::new).toList();
 
                     var authentication = new UsernamePasswordAuthenticationToken(

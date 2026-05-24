@@ -1,10 +1,10 @@
-package com.example.demo;
+package com.example.demo.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/api/sercet")
+@RequestMapping("/api/secret")
 @RestController
 public class SecretController {
     @GetMapping
